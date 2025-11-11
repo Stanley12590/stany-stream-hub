@@ -14,16 +14,256 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      contact_info: {
+        Row: {
+          id: string
+          updated_at: string | null
+          whatsapp_number: string
+        }
+        Insert: {
+          id?: string
+          updated_at?: string | null
+          whatsapp_number: string
+        }
+        Update: {
+          id?: string
+          updated_at?: string | null
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
+      live_channels: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          poster_url: string | null
+          stream_url: string
+          updated_at: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          poster_url?: string | null
+          stream_url: string
+          updated_at?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          poster_url?: string | null
+          stream_url?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_channels_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      movies: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description: string | null
+          genre: string | null
+          id: string
+          imdb_rating: number | null
+          poster_url: string | null
+          release_year: number | null
+          title: string
+          trailer_url: string | null
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          genre?: string | null
+          id?: string
+          imdb_rating?: number | null
+          poster_url?: string | null
+          release_year?: number | null
+          title: string
+          trailer_url?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          genre?: string | null
+          id?: string
+          imdb_rating?: number | null
+          poster_url?: string | null
+          release_year?: number | null
+          title?: string
+          trailer_url?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "movies_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          id: string
+          message: string
+          read: boolean | null
+          target_user_id: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          id?: string
+          message: string
+          read?: boolean | null
+          target_user_id?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          message?: string
+          read?: boolean | null
+          target_user_id?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          id: string
+          phone_number: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          phone_number?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          phone_number?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_subscriptions: {
+        Row: {
+          blocked: boolean | null
+          created_at: string | null
+          duration_minutes: number
+          id: string
+          last_activity_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          blocked?: boolean | null
+          created_at?: string | null
+          duration_minutes?: number
+          id?: string
+          last_activity_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          blocked?: boolean | null
+          created_at?: string | null
+          duration_minutes?: number
+          id?: string
+          last_activity_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +390,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
