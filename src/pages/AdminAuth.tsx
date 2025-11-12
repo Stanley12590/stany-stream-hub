@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Mail, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,11 +15,24 @@ const AdminAuth = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Admin authentication will be implemented in Phase 2
-    toast({
-      title: "Coming Soon",
-      description: "Admin panel will be available in Phase 2",
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      window.location.href = "/admin/dashboard";
+    }
 
     setIsLoading(false);
   };
@@ -67,11 +81,6 @@ const AdminAuth = () => {
               {isLoading ? "Logging in..." : "Admin Login"}
             </Button>
           </form>
-          <div className="mt-4 p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground text-center">
-              ℹ️ Admin panel functionality coming in Phase 2
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
